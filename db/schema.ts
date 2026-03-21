@@ -49,12 +49,8 @@ export const claims = pgTable("claims", {
 // Claims notes table
 export const claimsNotes = pgTable("claims_notes", {
   id: uuid("id").defaultRandom().primaryKey(),
-  claimId: uuid("claim_id")
-    .notNull()
-    .references(() => claims.id, { onDelete: "cascade" }),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  claimId: uuid("claim_id").notNull().references(() => claims.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   content: text("content").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
