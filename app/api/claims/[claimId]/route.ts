@@ -6,10 +6,10 @@ import { eq, desc } from "drizzle-orm";
 //GET a single claim for a user
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ claimId: string }> }
 ) {
   try {
-    const { id } = await params;
+    const { claimId } = await params;
 
     const [claimRow] = await db
       .select({
@@ -22,7 +22,7 @@ export async function GET(
       })
       .from(claims)
       .leftJoin(users, eq(claims.userId, users.id))
-      .where(eq(claims.id, id));
+      .where(eq(claims.id, claimId));
 
     if (!claimRow?.claim) {
       return NextResponse.json({ error: "Claim not found" }, { status: 404 });
@@ -32,16 +32,16 @@ export async function GET(
     const notes = await db
       .select()
       .from(claimsNotes)
-      .where(eq(claimsNotes.claimId, id))
+      .where(eq(claimsNotes.claimId, claimId))
       .orderBy(desc(claimsNotes.createdAt));
-
+    
     return NextResponse.json({
-      ...claimRow.claim,
+      ...claimRow.claim, 
       user: claimRow.user,
-      notes,
+      notes,           
     });
   } catch (error) {
-    console.error("GET /api/claims/[id] error:", error);
+    console.error("GET /api/claims/[claimId] error:", error);
     return NextResponse.json(
       { error: "Failed to fetch claim" },
       { status: 500 }

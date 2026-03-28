@@ -3,7 +3,7 @@ import db from "@/db";
 import { claims, users } from "@/db/schema";
 import { eq, desc } from "drizzle-orm";
 
-//GET all claims for a user or all claims
+//GET all claims for a single user or all claims
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -26,16 +26,12 @@ export async function GET(request: Request) {
       ? await baseQuery.where(eq(claims.userId, userId)).orderBy(desc(claims.createdAt))
       : await baseQuery.orderBy(desc(claims.createdAt));
 
-    console.log("results", results);
-
-    const claimsWithUser = results.map(({ claim, user }) => ({
+    const claimsWithUserInfo = results.map(({ claim, user }) => ({
       ...claim,
       user,
     }));
 
-    console.log("claimsWithUser", claimsWithUser);
-
-    return NextResponse.json(claimsWithUser);
+    return NextResponse.json(claimsWithUserInfo);
   } catch (error) {
     console.error("GET /api/claims error:", error);
     return NextResponse.json(
