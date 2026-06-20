@@ -1,5 +1,6 @@
 import ClaimHeader from "@/components/claim-detail/ClaimHeader";
 import CostBreakdown from "@/components/claim-detail/CostBreakdown";
+import NotesSection from "@/components/notes/NotesSection";
 import db from "@/db";
 import { claims } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -29,6 +30,7 @@ export default async function ClaimDetailPage({ params }: { params: { id: string
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <ClaimHeader claim={claim} />
       <CostBreakdown claim={claim} />
+      <NotesSection claimId={claim.id} userId={claim.userId} />
     </div>
   );
 }
